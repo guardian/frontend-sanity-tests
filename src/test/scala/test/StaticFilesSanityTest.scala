@@ -108,9 +108,6 @@ trait Http {
 
   def GET(url: String, compress: Boolean = false): Response = {
 
-    println(System.getProperty("http.proxyHost"))
-
-    //TODO proxy
     val connection = new URL(url).openConnection().asInstanceOf[HttpURLConnection]
 
     if (compress)
