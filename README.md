@@ -1,0 +1,1 @@
+Simple set of sanity test for things like the CDN
