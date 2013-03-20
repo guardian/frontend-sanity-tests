@@ -2,10 +2,10 @@ package test
 
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
-import java.net.{HttpURLConnection, URL}
+import java.net._
 import io.Source
-import java.util.zip.{DeflaterInputStream, GZIPInputStream}
-
+import java.util.zip.GZIPInputStream
+import scala.Some
 
 
 class StaticFilesSanityTest extends FlatSpec with ShouldMatchers with Http {
@@ -106,9 +106,14 @@ class Response(val connection: HttpURLConnection) {
 
 trait Http {
 
+  val proxy: Option[Proxy] = (Option(System.getProperty("http.proxyHost")), Option(System.getProperty("http.proxyPort"))) match {
+    case (Some(host), Some(port)) => Some(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port.toInt)))
+    case _ => None
+  }
+
   def GET(url: String, compress: Boolean = false): Response = {
 
-    val connection = new URL(url).openConnection().asInstanceOf[HttpURLConnection]
+    val connection = proxy.map(p => new URL(url).openConnection(p)).getOrElse(new URL(url).openConnection()).asInstanceOf[HttpURLConnection]
 
     if (compress)
       connection.setRequestProperty("Accept-Encoding", "deflate,gzip")
