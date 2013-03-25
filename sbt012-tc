@@ -43,6 +43,7 @@ java -Xmx4096M -XX:MaxPermSize=2048m \
   -XX:ReservedCodeCacheSize=128m \
   -Dsbt.boot.directory=$SBT_BOOT_DIR \
   -Dhttp.proxyHost=devproxy.gul3.gnl \
+  -Dsun.net.http.allowRestrictedHeaders=true \
   -Dhttp.proxyPort=3128 \
   $BUILD_PARAMS \
   $IVY_PARAMS \

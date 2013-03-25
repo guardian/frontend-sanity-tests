@@ -99,6 +99,8 @@ class Response(val connection: HttpURLConnection) {
 
   lazy val responseCode = connection.getResponseCode
 
+  lazy val responseMessage = connection.getResponseMessage
+
   def header(name: String) = connection.getHeaderField(name)
 
   def disconnect() { connection.disconnect() }
@@ -111,7 +113,7 @@ trait Http {
     case _ => None
   }
 
-  def GET(url: String, compress: Boolean = false): Response = {
+  def GET(url: String, compress: Boolean = false, headers: Seq[(String, String)] = Nil): Response = {
 
     val connection = proxy.map(p => new URL(url).openConnection(p)).getOrElse(new URL(url).openConnection()).asInstanceOf[HttpURLConnection]
 
@@ -120,11 +122,11 @@ trait Http {
     else
       connection.setRequestProperty("Accept-Encoding", "")
 
-    connection.connect()
-
+    headers.foreach{
+      case (key, value) => connection.setRequestProperty(key, value)
+    }
     new Response(connection)
   }
-
 }
 
 
