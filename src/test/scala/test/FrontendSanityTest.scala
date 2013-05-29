@@ -53,7 +53,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.bodyFromGzip should include("""{"html":""")
 
-    connection.header("Vary") should be ("Accept-Encoding")
+    connection.header("Vary") should include ("Accept-Encoding")
     connection.header("Content-Type") should be ("application/javascript")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
@@ -106,7 +106,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.bodyFromGzip should include("""{"html":""")
 
-    connection.header("Vary") should be ("Accept-Encoding")
+    connection.header("Vary") should be ("Origin,Accept,Accept-Encoding")
     connection.header("Content-Type") should be ("application/javascript")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
