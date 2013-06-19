@@ -7,7 +7,7 @@ import System._
 
 class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
 
-  val CacheControl = """public, max-age=(\d+), stale-while-revalidate=(\d+), stale-if-error=(\d+)""".r
+  val CacheControl = """max-age=(\d+), s-maxage=(\d+), stale-while-revalidate=(\d+), stale-if-error=(\d+)""".r
 
   "m.guardian.co.uk" should "serve with correct headers with no gzip" in {
 
@@ -22,7 +22,10 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.header("Content-Type") should be ("text/html; charset=utf-8")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
-      case CacheControl(maxAge, _, _) => maxAge.toInt should be > 50
+      case CacheControl(maxAge, sMaxAge, _, _) =>
+        maxAge.toInt should be > 50
+        sMaxAge.toInt should be > 50
+
       case _ => fail("Bad cache control")
     }
   }
@@ -40,7 +43,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.header("Content-Type") should be ("text/html; charset=utf-8")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
-      case CacheControl(maxAge, _, _) => maxAge.toInt should be > 50
+      case CacheControl(maxAge, _, _, _) => maxAge.toInt should be > 50
       case _ => fail("Bad cache control")
     }
   }
@@ -57,7 +60,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.header("Content-Type") should be ("application/javascript")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
-      case CacheControl(maxAge, _, _) => maxAge.toInt should be > 50
+      case CacheControl(maxAge, _, _, _) => maxAge.toInt should be > 50
       case _ => fail("Bad cache control")
     }
   }
@@ -75,7 +78,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.header("Content-Type") should be ("text/html; charset=utf-8")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
-      case CacheControl(maxAge, _, _) => maxAge.toInt should be > 50
+      case CacheControl(maxAge, _, _, _) => maxAge.toInt should be > 50
       case _ => fail("Bad cache control")
     }
   }
@@ -93,7 +96,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.header("Content-Type") should be ("text/html; charset=utf-8")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
-      case CacheControl(maxAge, _, _) => maxAge.toInt should be > 50
+      case CacheControl(maxAge, _, _, _) => maxAge.toInt should be > 50
       case _ => fail("Bad cache control")
     }
   }
@@ -110,7 +113,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.header("Content-Type") should be ("application/javascript")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
-      case CacheControl(maxAge,_, _) => maxAge.toInt should be > 50
+      case CacheControl(maxAge, _, _, _) => maxAge.toInt should be > 50
       case _ => fail("Bad cache control")
     }
   }
