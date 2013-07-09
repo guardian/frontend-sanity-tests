@@ -22,11 +22,11 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.body should include("The Guardian")
 
-    connection.header("Vary") should be ("Accept-Encoding")
+    connection.header("Vary") should be ("Accept-Encoding,User-Agent")
     connection.header("Content-Type") should be ("text/html; charset=utf-8")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
-      case L3CacheControl(maxAge, sMaxAge, _, _) =>
+      case FastlyCacheControl(maxAge, sMaxAge, _) =>
         maxAge.toInt should be > 50
         sMaxAge.toInt should be > 50
 
@@ -43,11 +43,11 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.bodyFromGzip should include("The Guardian")
 
-    connection.header("Vary") should be ("Accept-Encoding")
+    connection.header("Vary") should be ("Accept-Encoding,User-Agent")
     connection.header("Content-Type") should be ("text/html; charset=utf-8")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
-      case L3CacheControl(maxAge, _, _, _) => maxAge.toInt should be > 50
+      case FastlyCacheControl(maxAge, _, _) => maxAge.toInt should be > 50
       case _ =>
         println(connection.header("Cache-Control"))
         fail("Bad cache control")
@@ -56,7 +56,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
 
   it should "compress json" in {
     val connection = GET(
-      s"http://m.guardian.co.uk/commentisfree/trails?callback=trails&cachebust=${currentTimeMillis}",
+      s"http://api.nextgen.guardianapps.co.uk/commentisfree/trails?callback=trails&cachebust=${currentTimeMillis}",
       compress = true
     )
 
