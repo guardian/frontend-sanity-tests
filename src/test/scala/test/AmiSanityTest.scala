@@ -7,8 +7,6 @@ import System._
 
 class AmiSanityTest extends FlatSpec with ShouldMatchers with Http {
 
-  val CacheControl = """public, max-age=(\d+)""".r
-
   "www.theguardian.com" should "be on the latest version of the AMI" in {
 
     // if this test fails you probably need to update the stack to the latest AMI (and update this test)
@@ -18,6 +16,6 @@ class AmiSanityTest extends FlatSpec with ShouldMatchers with Http {
       compress = false
     )
 
-    connection.body should include("ami-c7c0d6b3")
+    connection.body should include("ami-149f7863")
   }
 }
