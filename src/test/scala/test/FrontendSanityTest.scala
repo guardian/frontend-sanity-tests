@@ -62,7 +62,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.bodyFromGzip should include("""{"html":""")
 
-    connection.header("Vary") should be ("Origin,Accept,Accept-Encoding")
+    connection.header("Vary") should be ("Accept, Origin, Accept-Encoding")
     connection.header("Content-Type") should be ("application/javascript")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
