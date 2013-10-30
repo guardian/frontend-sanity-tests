@@ -56,14 +56,14 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
 
   it should "compress json" in {
     val connection = GET(
-      s"http://api.nextgen.guardianapps.co.uk/commentisfree/trails?callback=trails&cachebust=${currentTimeMillis}&_edition=US",
+      s"http://api.nextgen.guardianapps.co.uk/commentisfree/trails.json?cachebust=${currentTimeMillis}&_edition=US",
       compress = true
     )
 
     connection.bodyFromGzip should include("""{"html":""")
 
     connection.header("Vary") should be ("Accept, Origin, Accept-Encoding")
-    connection.header("Content-Type") should be ("application/javascript")
+    connection.header("Content-Type") should be ("application/json")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
       case L3CacheControl(maxAge, _, _, _) => maxAge.toInt should be > 50
