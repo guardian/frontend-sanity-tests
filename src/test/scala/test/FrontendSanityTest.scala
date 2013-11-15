@@ -56,7 +56,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
 
   it should "compress json" in {
     val connection = GET(
-      s"http://api.nextgen.guardianapps.co.uk/commentisfree/trails.json?cachebust=${currentTimeMillis}&_edition=US",
+      s"http://api.nextgen.guardianapps.co.uk/top-stories/trails.json?page-size=10&view=link&_edition=UK&cachebust=$currentTimeMillis",
       compress = true
     )
 
