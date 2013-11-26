@@ -7,11 +7,9 @@ import System._
 
 class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
 
-  // caching coming through L3
-  val L3CacheControl = """max-age=(\d+), s-maxage=(\d+), stale-while-revalidate=(\d+), stale-if-error=(\d+)""".r
-
   // caching coming through Fastly
-  val FastlyCacheControl = """max-age=(\d+),  stale-while-revalidate=(\d+), stale-if-error=(\d+), private""".r
+  val HtmlCacheControl = """max-age=(\d+), private""".r
+  val AjaxCacheControl = """max-age=(\d+)""".r
 
   "www.theguardian.com" should "serve with correct headers with no gzip" in {
 
@@ -26,11 +24,9 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.header("Content-Type") should be ("text/html; charset=utf-8")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
-      case FastlyCacheControl(maxAge, sMaxAge, _) =>
+      case HtmlCacheControl(maxAge) =>
         maxAge.toInt should be > 50
-        sMaxAge.toInt should be > 50
-
-      case _ => fail("Bad cache control")
+      case bad => fail("Bad cache control" + bad)
     }
   }
 
@@ -47,10 +43,8 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.header("Content-Type") should be ("text/html; charset=utf-8")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
-      case FastlyCacheControl(maxAge, _, _) => maxAge.toInt should be > 50
-      case _ =>
-        println(connection.header("Cache-Control"))
-        fail("Bad cache control")
+      case HtmlCacheControl(maxAge) => maxAge.toInt should be > 50
+      case bad => fail("Bad cache control" + bad)
     }
   }
 
@@ -66,8 +60,8 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.header("Content-Type") should be ("application/json")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
-      case L3CacheControl(maxAge, _, _, _) => maxAge.toInt should be > 50
-      case _ => fail("Bad cache control")
+      case AjaxCacheControl(maxAge) => maxAge.toInt should be > 50
+      case bad => fail("Bad cache control" + bad)
     }
   }
 }
