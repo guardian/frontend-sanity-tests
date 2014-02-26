@@ -9,7 +9,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
 
   // caching coming through Fastly
   val HtmlCacheControl = """max-age=(\d+), private""".r
-  val AjaxCacheControl = """max-age=(\d+)""".r
+  val AjaxCacheControl = """max-age=(\d+), private""".r
 
   "www.theguardian.com" should "serve with correct headers with no gzip" in {
 
