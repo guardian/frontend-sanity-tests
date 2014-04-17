@@ -25,7 +25,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
       case HtmlCacheControl(maxAge) =>
-        maxAge.toInt should be > 50
+        maxAge.toInt should be > 0
       case bad => fail("Bad cache control" + bad)
     }
   }
@@ -43,7 +43,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.header("Content-Type") should be ("text/html; charset=utf-8")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
-      case HtmlCacheControl(maxAge) => maxAge.toInt should be > 50
+      case HtmlCacheControl(maxAge) => maxAge.toInt should be > 0
       case bad => fail("Bad cache control" + bad)
     }
   }
@@ -60,7 +60,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.header("Content-Type") should be ("application/json; charset=utf-8")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
-      case AjaxCacheControl(maxAge) => maxAge.toInt should be > 50
+      case AjaxCacheControl(maxAge) => maxAge.toInt should be > 0
       case bad => fail("Bad cache control" + bad)
     }
   }
