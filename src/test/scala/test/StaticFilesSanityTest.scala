@@ -87,6 +87,19 @@ class StaticFilesSanityTest extends FlatSpec with ShouldMatchers with Http {
     }
   }
 
+  it should "add the Access-Control-Allow-Origin header" in {
+
+    val connection = GET(
+      s"http://assets.guim.co.uk/stylesheets/main.min.3658efd6a677794423bdd3839d503289.css?cacheBust=${System.currentTimeMillis}",
+      compress = true,
+      headers = Seq("Origin" -> "www.theguardian.com")
+    )
+
+    connection.header("Access-Control-Allow-Origin").trim should be ("*")
+    connection.header("Access-Control-Allow-Credentials").trim should be ("true")
+    connection.header("Access-Control-Allow-Headers").trim should be ("GET")
+  }
+
   it should "serve 404s" in {
     val connection = GET(s"http://assets.guim.co.uk/javascripts/does-not-exist.js?cacheBust=${System.currentTimeMillis}")
     connection.responseCode should be (404)
