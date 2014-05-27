@@ -33,21 +33,6 @@ echo "setting ivy cache dir"
 IVY_PARAMS="-Dsbt.ivy.home=$HOME/.ivy2-frontend -Divy.home=$HOME/.ivy2-frontend"
 echo $IVY_PARAMS
 
-
-DOMAIN=`hostname -d`
-
-if [ "$DOMAIN" != "gc2.dc1.gnm" ]; then
-    # proxy that Play uses
-    export proxy_host=devproxy.gul3.gnl
-    export proxy_port=3128
-fi
-
-if [ "$DOMAIN" = "gc2.dc1.gnm" ]; then
-    PROXY_CONF=""
-else
-    PROXY_CONF="-Dhttp.proxyHost=devproxy.gul3.gnl -Dhttp.proxyPort=3128"
-fi
-
 #MaxPermSize specifies the the maximum size for the permanent generation heap,
 # a heap that holds objects such as classes and methods. Xmx is the heap size.
 java -Xmx4096M -XX:MaxPermSize=2048m \
