@@ -22,7 +22,7 @@ class StaticFilesSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.body should include(".table-football-header{border-bottom:1px solid #DEDEDD;}")
 
-    connection.header("Vary") should be ("Accept-Encoding")
+    connection.header("Vary") should be ("Origin,Accept,Accept-Encoding")
     connection.header("Content-Type") should be ("text/css")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
@@ -40,7 +40,7 @@ class StaticFilesSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.bodyFromGzip should include(".table-football-header{border-bottom:1px solid #DEDEDD;}")
 
-    connection.header("Vary") should be ("Accept-Encoding")
+    connection.header("Vary") should be ("Origin,Accept,Accept-Encoding")
     connection.header("Content-Encoding") should be ("gzip")
     connection.header("Content-Type") should be ("text/css")
     connection.responseCode should be (200)
@@ -59,7 +59,7 @@ class StaticFilesSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.body should include("return 0==aa.call(e).indexOf(\"[object \"+t)")
 
-    connection.header("Vary") should be ("Accept-Encoding")
+    connection.header("Vary") should be ("Origin,Accept,Accept-Encoding")
     connection.header("Content-Type") should be ("application/x-javascript")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
@@ -77,7 +77,7 @@ class StaticFilesSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.bodyFromGzip should include("return 0==aa.call(e).indexOf(\"[object \"+t)")
 
-    connection.header("Vary") should be ("Accept-Encoding")
+    connection.header("Vary") should be ("Origin,Accept,Accept-Encoding")
     connection.header("Content-Encoding") should be ("gzip")
     connection.header("Content-Type") should be ("application/x-javascript")
     connection.responseCode should be (200)
