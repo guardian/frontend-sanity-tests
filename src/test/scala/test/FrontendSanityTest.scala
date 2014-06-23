@@ -2,7 +2,6 @@ package test
 
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
-import System._
 
 
 class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
@@ -50,19 +49,23 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
 
   it should "compress json" in {
     val connection = GET(
-      s"http://api.nextgen.guardianapps.co.uk/top-stories/trails.json?page-size=10&view=link&_edition=UK&cachebust=$currentTimeMillis",
-      compress = true
+      s"http://api.nextgen.guardianapps.co.uk/most-read/world.json",
+      compress = true,
+      headers = Seq(
+        "Accept" -> "application/json",
+        "Origin" -> "http://www.theguardian.com"
+      )
     )
 
-    connection.bodyFromGzip should include("""{"html":""")
+    connection.body should include("""{"html":""")
 
-    connection.header("Vary") should be ("Accept, Origin, Accept-Encoding")
-    connection.header("Content-Type") should be ("application/json; charset=utf-8")
     connection.responseCode should be (200)
+    connection.header("Content-Type") should be ("application/json; charset=utf-8")
     connection.header("Cache-Control") match {
       case AjaxCacheControl(maxAge) => maxAge.toInt should be > 0
       case bad => fail("Bad cache control" + bad)
     }
+    connection.header("Vary") should be ("Accept-Encoding,Origin,Accept")
   }
 }
 

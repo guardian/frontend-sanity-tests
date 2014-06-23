@@ -1,11 +1,12 @@
 package test
 
+import org.apache.http.client.methods.{CloseableHttpResponse, HttpGet}
+import org.apache.http.client.protocol.{RequestAcceptEncoding, ResponseContentEncoding}
+import org.apache.http.impl.client.HttpClients
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
-import java.net._
-import io.Source
-import java.util.zip.GZIPInputStream
-import scala.Some
+
+import scala.io.Source
 
 
 class StaticFilesSanityTest extends FlatSpec with ShouldMatchers with Http {
@@ -41,7 +42,6 @@ class StaticFilesSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.bodyFromGzip should include(".table-football-header{border-bottom:1px solid #DEDEDD;}")
 
     connection.header("Vary") should be ("Origin,Accept,Accept-Encoding")
-    connection.header("Content-Encoding") should be ("gzip")
     connection.header("Content-Type") should be ("text/css")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
@@ -78,7 +78,6 @@ class StaticFilesSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.bodyFromGzip should include("return 0==aa.call(e).indexOf(\"[object \"+t)")
 
     connection.header("Vary") should be ("Origin,Accept,Accept-Encoding")
-    connection.header("Content-Encoding") should be ("gzip")
     connection.header("Content-Type") should be ("application/x-javascript")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
@@ -106,39 +105,38 @@ class StaticFilesSanityTest extends FlatSpec with ShouldMatchers with Http {
   }
 }
 
-class Response(val connection: HttpURLConnection) {
-  lazy val body = Source.fromInputStream(connection.getInputStream).getLines().mkString("")
-  lazy val bodyFromGzip = Source.fromInputStream(new GZIPInputStream(connection.getInputStream)).getLines().mkString("")
+class Response(val response: CloseableHttpResponse) {
+  private val entity = response.getEntity
+  lazy val body = Source.fromInputStream(entity.getContent).getLines().mkString("")
+  lazy val bodyFromGzip = body//Source.fromInputStream(new GZIPInputStream(entity.getContent)).getLines().mkString("")
 
-  lazy val responseCode = connection.getResponseCode
+  lazy val responseCode = response.getStatusLine.getStatusCode
 
-  lazy val responseMessage = connection.getResponseMessage
+  lazy val responseMessage = response.getStatusLine.getReasonPhrase
 
-  def header(name: String) = connection.getHeaderField(name)
+  def header(name: String) = response.getFirstHeader(name).getValue
 
-  def disconnect() { connection.disconnect() }
+  def disconnect() { response.close() }
 }
 
 trait Http {
 
-  val proxy: Option[Proxy] = (Option(System.getProperty("http.proxyHost")), Option(System.getProperty("http.proxyPort"))) match {
-    case (Some(host), Some(port)) => Some(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port.toInt)))
-    case _ => None
-  }
-
   def GET(url: String, compress: Boolean = false, headers: Seq[(String, String)] = Nil): Response = {
 
-    val connection = proxy.map(p => new URL(url).openConnection(p)).getOrElse(new URL(url).openConnection()).asInstanceOf[HttpURLConnection]
+    val client = if (compress) {
+      HttpClients.custom().addInterceptorFirst(new RequestAcceptEncoding).addInterceptorLast(new ResponseContentEncoding).build()
+    } else {
+      HttpClients.createDefault()
+    }
 
-    if (compress)
-      connection.setRequestProperty("Accept-Encoding", "deflate,gzip")
-    else
-      connection.setRequestProperty("Accept-Encoding", "")
+    val request = new HttpGet(url)
 
     headers.foreach{
-      case (key, value) => connection.setRequestProperty(key, value)
+      case (key, value) => request.setHeader(key, value)
     }
-    new Response(connection)
+
+    val response = client.execute(request)
+    new Response(response)
   }
 }
 
