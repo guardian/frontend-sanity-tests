@@ -7,8 +7,8 @@ import org.scalatest.matchers.ShouldMatchers
 class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
 
   // caching coming through Fastly
-  val HtmlCacheControl = """max-age=(\d+), private""".r
-  val AjaxCacheControl = """max-age=(\d+), private""".r
+  val HtmlCacheControl = """max-age=(\d+), stale-while-revalidate=(\d+), stale-if-error=(\d+), private""".r
+  val AjaxCacheControl = """max-age=(\d+), stale-while-revalidate=(\d+), stale-if-error=(\d+), private""".r
 
   "www.theguardian.com" should "serve with correct headers with no gzip" in {
 
@@ -23,7 +23,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.header("Content-Type") should be ("text/html; charset=utf-8")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
-      case HtmlCacheControl(maxAge) =>
+      case HtmlCacheControl(maxAge, _, _) =>
         maxAge.toInt should be > 0
       case bad => fail("Bad cache control" + bad)
     }
@@ -42,7 +42,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.header("Content-Type") should be ("text/html; charset=utf-8")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
-      case HtmlCacheControl(maxAge) => maxAge.toInt should be > 0
+      case HtmlCacheControl(maxAge, _, _) => maxAge.toInt should be > 0
       case bad => fail("Bad cache control" + bad)
     }
   }
@@ -62,7 +62,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
     connection.responseCode should be (200)
     connection.header("Content-Type") should be ("application/json; charset=utf-8")
     connection.header("Cache-Control") match {
-      case AjaxCacheControl(maxAge) => maxAge.toInt should be > 0
+      case AjaxCacheControl(maxAge, _, _) => maxAge.toInt should be > 0
       case bad => fail("Bad cache control" + bad)
     }
     connection.header("Vary") should be ("Accept-Encoding,Origin,Accept")
