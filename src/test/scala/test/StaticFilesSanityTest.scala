@@ -131,7 +131,7 @@ trait Http {
 
     val request = new HttpGet(url)
 
-    headers.foreach{
+    (headers :+ ("gu-mock-external" -> "true")).foreach{
       case (key, value) => request.setHeader(key, value)
     }
 
