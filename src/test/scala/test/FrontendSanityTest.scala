@@ -21,6 +21,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.header("Vary") should be ("Accept-Encoding,User-Agent")
     connection.header("Content-Type") should be ("text/html; charset=utf-8")
+    connection.header("X-GU-Platform") should be ("next-gen-router")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
       case HtmlCacheControl(maxAge, _, _) =>
@@ -40,6 +41,7 @@ class FrontendSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.header("Vary") should be ("Accept-Encoding,User-Agent")
     connection.header("Content-Type") should be ("text/html; charset=utf-8")
+    connection.header("X-GU-Platform") should be ("next-gen-router")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
       case HtmlCacheControl(maxAge, _, _) => maxAge.toInt should be > 0
