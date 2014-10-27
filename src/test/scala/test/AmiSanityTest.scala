@@ -16,6 +16,6 @@ class AmiSanityTest extends FlatSpec with ShouldMatchers with Http {
       compress = false
     )
 
-    connection.body should include("ami-aa8f28dd")
+    connection.body should include("ami-9c7ad8eb")
   }
 }
