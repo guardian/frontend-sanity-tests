@@ -16,6 +16,8 @@ class AmiSanityTest extends FlatSpec with ShouldMatchers with Http {
       compress = false
     )
 
-    connection.body should include("ami-9c7ad8eb")
+    // This should match the source AMI of our packer config:
+    // https://github.com/guardian/platform/blob/master/packer/frontend.json#L11
+    connection.body should include("ami-7b3db00c")
   }
 }
