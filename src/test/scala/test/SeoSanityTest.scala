@@ -1,10 +1,10 @@
 package test
 
-import org.scalatest.FlatSpec
+import org.scalatest.{OptionValues, FlatSpec}
 import org.scalatest.matchers.ShouldMatchers
 import play.api.libs.json._
 
-class SeoSanityTest extends FlatSpec with ShouldMatchers with Http {
+class SeoSanityTest extends FlatSpec with ShouldMatchers with Http with OptionValues {
 
   def checkUrl(url: String): Unit = {
     val connection = GET(
@@ -17,10 +17,10 @@ class SeoSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     val json: JsValue = Json.parse(connection.body)
 
-    val messages = (json \ "messages").as[JsArray].value
+    val messages = (json \ "messages").asOpt[JsArray]
 
-    withClue(s"${messages.toSeq.mkString("\n")}\n") {
-      messages.size should be(0)
+    withClue(s"${messages.value.as[Seq[String]].mkString("\n")}\n") {
+      messages.value.value.size should be(0)
     }
   }
 
