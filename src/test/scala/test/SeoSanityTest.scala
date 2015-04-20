@@ -37,7 +37,7 @@ class SeoSanityTest extends FlatSpec with ShouldMatchers with Http with OptionVa
   }
 
   "Live blogs" should "serve correct and valid seo meta data" in {
-    checkUrl("http://www.theguardian.com/politics/live/2015/apr/17/election-2015-live-ed-miliband-nicola-sturgeon-david-cameron-snp-labour")
+    checkUrl("http://www.theguardian.com/football/live/2015/apr/18/reading-arsenal-fa-cup-semi-final-live")
   }
 
   "Gallery pages" should "serve correct and valid seo meta data" in {
