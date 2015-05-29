@@ -1,12 +1,11 @@
 package test
 
-import org.scalatest.{OptionValues, FlatSpec}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{FlatSpec, Matchers, OptionValues}
 import play.api.libs.json._
 
-class SeoSanityTest extends FlatSpec with ShouldMatchers with Http with OptionValues {
+class SeoSanityTest extends FlatSpec with Matchers with Http with OptionValues {
 
-  def checkUrl(url: String): Unit = {
+  def checkUrl(url: String, filter: Seq[String] => Seq[String] = identity): Unit = {
     val connection = GET(
       s"http://linter.structured-data.org/?url=$url",
       compress = true,
@@ -17,10 +16,12 @@ class SeoSanityTest extends FlatSpec with ShouldMatchers with Http with OptionVa
 
     val json: JsValue = Json.parse(connection.body)
 
-    val messages = (json \ "messages").asOpt[JsArray]
+    val messages = (json \ "messages").asOpt[JsArray].value.as[Seq[String]]
 
-    withClue(s"${messages.value.as[Seq[String]].mkString("\n")}\n") {
-      messages.value.value.size should be(0)
+    val filtered = filter(messages)
+
+    withClue(s"${filtered.mkString("\n")}\n") {
+      filtered.size should be(0)
     }
   }
 
@@ -37,7 +38,16 @@ class SeoSanityTest extends FlatSpec with ShouldMatchers with Http with OptionVa
   }
 
   "Live blogs" should "serve correct and valid seo meta data" in {
-    checkUrl("http://www.theguardian.com/football/live/2015/apr/18/reading-arsenal-fa-cup-semi-final-live")
+    checkUrl("http://www.theguardian.com/football/live/2015/apr/18/reading-arsenal-fa-cup-semi-final-live", {
+      // this is a temp hack as LiveBlogPosting is not on schema.org yet. Please remove if http://schema.org/LiveBlogPosting is there
+      messages: Seq[String] =>
+        messages.filter {
+              case "class schema:LiveBlogPosting: No class definition found" => false
+              case "property schema:liveBlogUpdate: No property definition found" => false
+              case _ => true
+            }
+        }
+    )
   }
 
   "Gallery pages" should "serve correct and valid seo meta data" in {
