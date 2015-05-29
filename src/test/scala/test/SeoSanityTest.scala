@@ -25,17 +25,17 @@ class SeoSanityTest extends FlatSpec with Matchers with Http with OptionValues {
     }
   }
 
-  "The network front" should "serve correct and valid seo meta data" in {
-      checkUrl("http://www.theguardian.com/uk")
-  }
-
-  "Tag pages" should "serve correct and valid seo meta data" in {
-    checkUrl("http://www.theguardian.com/world/series/guardian-world-networks")
-  }
-
-  "Article pages" should "serve correct and valid seo meta data" in {
-    checkUrl("http://www.theguardian.com/politics/commentisfree/2015/apr/16/tv-opposition-leaders-debate-spin-room-westminster-artless-bullshit")
-  }
+//  "The network front" should "serve correct and valid seo meta data" in {
+//      checkUrl("http://www.theguardian.com/uk")
+//  }
+//
+//  "Tag pages" should "serve correct and valid seo meta data" in {
+//    checkUrl("http://www.theguardian.com/world/series/guardian-world-networks")
+//  }
+//
+//  "Article pages" should "serve correct and valid seo meta data" in {
+//    checkUrl("http://www.theguardian.com/politics/commentisfree/2015/apr/16/tv-opposition-leaders-debate-spin-room-westminster-artless-bullshit")
+//  }
 
   "Live blogs" should "serve correct and valid seo meta data" in {
     checkUrl("http://www.theguardian.com/football/live/2015/apr/18/reading-arsenal-fa-cup-semi-final-live", {
@@ -48,17 +48,19 @@ class SeoSanityTest extends FlatSpec with Matchers with Http with OptionValues {
             }
         }
     )
+    // when this line fails, it's time to remove the above filters
+    GET("http://schema.org/LiveBlogPosting").responseCode should be(404)
   }
 
-  "Gallery pages" should "serve correct and valid seo meta data" in {
-    checkUrl("http://www.theguardian.com/artanddesign/gallery/2015/apr/15/postcards-from-the-ruins-the-desolate-edge-of-eastern-europe-tamas-dezso-in-pictures")
-  }
-
-  "Video pages" should "serve correct and valid seo meta data" in {
-    checkUrl("http://www.theguardian.com/lifeandstyle/video/2015/apr/17/motivation-finish-studies-problem-agony-aunt-video")
-  }
-
-  "Interactive pages" should "serve correct and valid seo meta data" in {
-    checkUrl("http://www.theguardian.com/environment/ng-interactive/2015/apr/16/gates-foundation-wellcome-trust-climate-change-divest-fossil-fuels-guardian")
-  }
+//  "Gallery pages" should "serve correct and valid seo meta data" in {
+//    checkUrl("http://www.theguardian.com/artanddesign/gallery/2015/apr/15/postcards-from-the-ruins-the-desolate-edge-of-eastern-europe-tamas-dezso-in-pictures")
+//  }
+//
+//  "Video pages" should "serve correct and valid seo meta data" in {
+//    checkUrl("http://www.theguardian.com/lifeandstyle/video/2015/apr/17/motivation-finish-studies-problem-agony-aunt-video")
+//  }
+//
+//  "Interactive pages" should "serve correct and valid seo meta data" in {
+//    checkUrl("http://www.theguardian.com/environment/ng-interactive/2015/apr/16/gates-foundation-wellcome-trust-climate-change-divest-fossil-fuels-guardian")
+//  }
 }
