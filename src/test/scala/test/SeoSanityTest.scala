@@ -63,4 +63,9 @@ class SeoSanityTest extends FlatSpec with Matchers with Http with OptionValues {
   "Interactive pages" should "serve correct and valid seo meta data" in {
     checkUrl("http://www.theguardian.com/environment/ng-interactive/2015/apr/16/gates-foundation-wellcome-trust-climate-change-divest-fossil-fuels-guardian")
   }
+
+  "Review pages" should "serve correct and valid seo meta data" in {
+    checkUrl("http://www.theguardian.com/stage/2015/jun/01/the-elephant-man-review-bradley-cooper-london")
+  }
+
 }
