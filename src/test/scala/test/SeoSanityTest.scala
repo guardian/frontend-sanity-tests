@@ -18,10 +18,26 @@ class SeoSanityTest extends FlatSpec with Matchers with Http with OptionValues {
 
     val messages = (json \ "messages").asOpt[JsArray].value.as[Seq[String]]
 
-    val filtered = filter(messages)
+    val filtered = filter(ignoreHtmlErrors(messages))
 
     withClue(s"${filtered.mkString("\n")}\n") {
       filtered.size should be(0)
+    }
+  }
+
+  /**
+   * this is needed because the validator validates just about everything even stuff we don't care about
+   * @param messages
+   */
+  def ignoreHtmlErrors(messages: Seq[String]) = {
+    val tag = ".*: Tag [^ ]* invalid".r
+    val entity = ".*: htmlParseEntityRef: .*".r
+    val scriptWithClose = ".*: Element script embeds close tag".r
+    messages.filter {
+      case tag() => false
+      case entity() => false
+      case scriptWithClose() => false
+      case _ => true
     }
   }
 
