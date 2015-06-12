@@ -12,6 +12,9 @@ export PATH=rbenv-master/bin:rbenv-master/shims:$PATH
 rbenv install --list
 rbenv install 2.1.5
 
+which gem
+gem install bundler
+
 rbenv rehash
 
 ## then get the linter itself
