@@ -11,7 +11,7 @@ class SeoSanityTest extends FlatSpec with Matchers with Http with OptionValues {
 
   def checkUrl(url: String, filter: Seq[String] => Seq[String] = identity): Unit = {
 
-    val linterCommand = Process(Seq("/usr/bin/env", "ruby", "./linter.rb", url), new File("linter-master/"))
+    val linterCommand = Process(Seq("ruby", "./linter.rb", url), new File("linter-master/"))
 
     val messagesJson = new StringBuilder()
 
