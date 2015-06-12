@@ -13,6 +13,10 @@ export PATH=rbenv-master/bin:rbenv-master/shims:$PATH
 
 rbenv install 2.1.5
 
+rbenv versions
+rbenv global 2.1.5
+rbenv versions
+
 rbenv rehash
 
 which gem
