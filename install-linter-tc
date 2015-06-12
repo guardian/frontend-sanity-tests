@@ -17,12 +17,12 @@ rbenv versions
 rbenv global 2.1.5
 rbenv versions
 
-rbenv rehash
+#rbenv rehash
 
 which gem
-gem install bundler
+gem install bundle
 
-rbenv rehash
+#rbenv rehash
 
 ## then get the linter itself
 
