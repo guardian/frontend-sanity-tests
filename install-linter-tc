@@ -1,6 +1,19 @@
 #!/bin/bash
 
-# this is to get the linter and set it up for the tests to use
+### this is to get the linter and set it up for the tests to use
+
+## first set up ruby
+curl https://codeload.github.com/sstephenson/rbenv/tar.gz/master|tar xz
+curl https://codeload.github.com/sstephenson/ruby-build/tar.gz/master|tar xz
+mkdir rbenv-master/plugins
+mv ruby-build-master rbenv-master/plugins/ruby-build
+export PATH=rbenv-master/bin:rbenv-master/shims:$PATH
+
+rbenv install 2.1.5
+
+rbenv rehash
+
+## then get the linter itself
 
 # unzips into linter-master/*
 curl https://codeload.github.com/structured-data/linter/tar.gz/master|tar xz
