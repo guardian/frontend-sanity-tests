@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. ../setup-ruby
+
+ruby ./linter.rb http://www.theguardian.com/uk
