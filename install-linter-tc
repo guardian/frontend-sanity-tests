@@ -9,6 +9,7 @@ mkdir rbenv-master/plugins
 mv ruby-build-master rbenv-master/plugins/ruby-build
 export PATH=rbenv-master/bin:rbenv-master/shims:$PATH
 
+rbenv install --list
 rbenv install 2.1.5
 
 rbenv rehash
@@ -19,4 +20,5 @@ rbenv rehash
 curl https://codeload.github.com/structured-data/linter/tar.gz/master|tar xz
 cp linter.rb linter-master/
 cd linter-master
+which bundle
 bundle install
