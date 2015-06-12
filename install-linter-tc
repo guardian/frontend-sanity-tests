@@ -32,6 +32,5 @@ cp linter.rb linter-master/
 cd linter-master
 which bundle
 echo PATH: $PATH
-ls -l rbenv-master/shims
 bundle install
 cd -
