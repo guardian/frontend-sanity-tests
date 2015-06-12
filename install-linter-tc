@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# this is to get the linter and set it up for the tests to use
+
+# unzips into linter-master/*
+curl https://codeload.github.com/structured-data/linter/tar.gz/master|tar xz
+cp linter.rb linter-master/
+cd linter-master
+bundle install

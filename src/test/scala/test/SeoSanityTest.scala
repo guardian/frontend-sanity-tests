@@ -1,22 +1,35 @@
 package test
 
+import java.io.File
+
 import org.scalatest.{FlatSpec, Matchers, OptionValues}
 import play.api.libs.json._
+
+import scala.sys.process._
 
 class SeoSanityTest extends FlatSpec with Matchers with Http with OptionValues {
 
   def checkUrl(url: String, filter: Seq[String] => Seq[String] = identity): Unit = {
-    val connection = GET(
-      s"http://linter.structured-data.org/?url=$url",
-      compress = true,
-      headers = Seq(
-        "Accept" -> "application/json"
-      )
+
+    val linterCommand = Process(Seq("/usr/bin/env", "ruby", "./linter.rb", url), new File("linter-master/"))
+
+    val messagesJson = new StringBuilder()
+
+    val exitCode = linterCommand ! ProcessLogger(
+      out => {
+        println(s"linter out: $out")
+        messagesJson.append(out)
+      },
+      err => println(s"linter stderr: $err")
     )
 
-    val json: JsValue = Json.parse(connection.body)
+    withClue("linter should return successful exit code, see above for stderr") {
+      exitCode should be(0)
+    }
 
-    val messages = (json \ "messages").asOpt[JsArray].value.as[Seq[String]]
+    val json: JsValue = Json.parse(messagesJson.toString)
+
+    val messages = json.as[JsArray].value.seq.map { _.as[String] }
 
     val filtered = filter(ignoreHtmlErrors(messages))
 
