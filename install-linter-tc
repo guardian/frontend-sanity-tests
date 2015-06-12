@@ -8,7 +8,7 @@ curl https://codeload.github.com/sstephenson/ruby-build/tar.gz/master|tar xz
 mkdir rbenv-master/plugins
 mv ruby-build-master rbenv-master/plugins/ruby-build
 
-. setup-ruby
+. setup-ruby `pwd`
 
 rbenv install 2.1.5
 

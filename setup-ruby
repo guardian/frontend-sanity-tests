@@ -1,2 +1,4 @@
-export RBENV_ROOT=`pwd`/rbenv-master
-export PATH=`pwd`/rbenv-master/bin:`pwd`/rbenv-master/shims:$PATH
+export RBENV_ROOT=$1/rbenv-master
+echo base dir is `ls -ld $RBENV_ROOT`
+export PATH=$1/rbenv-master/bin:$1/rbenv-master/shims:$PATH
+echo $PATH

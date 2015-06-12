@@ -1,5 +1,9 @@
 #!/bin/bash
 
-. ../setup-ruby
+here=$(dirname `pwd`/$0)
+echo linter is in $here
+. $here/setup-ruby $here
 
-ruby ./linter.rb http://www.theguardian.com/uk
+rbenv global 2.1.5
+rbenv versions
+ruby ./linter.rb $1
