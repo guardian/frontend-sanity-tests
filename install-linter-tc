@@ -7,10 +7,13 @@ curl https://codeload.github.com/sstephenson/rbenv/tar.gz/master|tar xz
 curl https://codeload.github.com/sstephenson/ruby-build/tar.gz/master|tar xz
 mkdir rbenv-master/plugins
 mv ruby-build-master rbenv-master/plugins/ruby-build
+
+export RBENV_ROOT=`pwd`/rbenv-master
 export PATH=rbenv-master/bin:rbenv-master/shims:$PATH
 
-rbenv install --list
 rbenv install 2.1.5
+
+rbenv rehash
 
 which gem
 gem install bundler
