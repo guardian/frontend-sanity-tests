@@ -22,7 +22,7 @@ rbenv versions
 which gem
 gem install bundle
 
-#rbenv rehash
+rbenv rehash
 
 ## then get the linter itself
 
@@ -31,4 +31,6 @@ curl https://codeload.github.com/structured-data/linter/tar.gz/master|tar xz
 cp linter.rb linter-master/
 cd linter-master
 which bundle
+echo PATH: $PATH
+ls -l rbenv-master/shims
 bundle install
