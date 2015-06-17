@@ -23,7 +23,7 @@ class StaticFilesSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.body should include(".table-football-header{border-bottom:1px solid #DEDEDD;}")
 
-    connection.header("Vary") should be ("Origin,Accept,Accept-Encoding")
+    connection.header("Vary") should be ("Accept-Encoding")
     connection.header("Content-Type") should be ("text/css")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
@@ -41,7 +41,7 @@ class StaticFilesSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.bodyFromGzip should include(".table-football-header{border-bottom:1px solid #DEDEDD;}")
 
-    connection.header("Vary") should be ("Origin,Accept,Accept-Encoding")
+    connection.header("Vary") should be ("Accept-Encoding")
     connection.header("Content-Type") should be ("text/css")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
@@ -59,7 +59,7 @@ class StaticFilesSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.body should include("return 0==aa.call(e).indexOf(\"[object \"+t)")
 
-    connection.header("Vary") should be ("Origin,Accept,Accept-Encoding")
+    connection.header("Vary") should be ("Accept-Encoding")
     connection.header("Content-Type") should be ("application/x-javascript")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
@@ -77,7 +77,7 @@ class StaticFilesSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.bodyFromGzip should include("return 0==aa.call(e).indexOf(\"[object \"+t)")
 
-    connection.header("Vary") should be ("Origin,Accept,Accept-Encoding")
+    connection.header("Vary") should be ("Accept-Encoding")
     connection.header("Content-Type") should be ("application/x-javascript")
     connection.responseCode should be (200)
     connection.header("Cache-Control") match {
@@ -96,12 +96,12 @@ class StaticFilesSanityTest extends FlatSpec with ShouldMatchers with Http {
 
     connection.header("Access-Control-Allow-Origin").trim should be ("*")
     connection.header("Access-Control-Allow-Credentials").trim should be ("true")
-    connection.header("Access-Control-Allow-Headers").trim should be ("GET")
+    connection.header("Access-Control-Allow-Headers").trim should be ("X-Requested-With,Origin,Accept,Content-Type")
   }
 
-  it should "serve 404s" in {
+  it should "serve 403s" in {
     val connection = GET(s"http://assets.guim.co.uk/javascripts/does-not-exist.js?cacheBust=${System.currentTimeMillis}")
-    connection.responseCode should be (404)
+    connection.responseCode should be (403)
   }
 }
 
