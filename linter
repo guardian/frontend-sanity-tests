@@ -1,0 +1,7 @@
+#!/bin/bash
+
+here=$(dirname `pwd`/$0)
+. $here/setup-ruby $here
+
+rbenv global 2.1.5
+ruby ./linter.rb $1
