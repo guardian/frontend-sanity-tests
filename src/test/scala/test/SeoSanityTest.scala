@@ -73,6 +73,8 @@ class SeoSanityTest extends FlatSpec with Matchers with Http with OptionValues {
         messages.filter {
               case "class schema:LiveBlogPosting: No class definition found" => false
               case "property schema:liveBlogUpdate: No property definition found" => false
+              case "property schema:coverageStartTime: No property definition found" => false
+              case "property schema:coverageEndTime: No property definition found" => false
               case _ => true
             }
         }
