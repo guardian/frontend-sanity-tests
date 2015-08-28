@@ -46,7 +46,7 @@ class SeoSanityTest extends FlatSpec with Matchers with Http with OptionValues {
     val tag = ".*: Tag [^ ]* invalid".r
     val entity = ".*: htmlParseEntityRef: .*".r
     val scriptWithClose = ".*: Element script embeds close tag".r
-    val dateTimes = ".* not compatible with rangeIncludes (schema:DateTime)".r
+    val dateTimes = ".* not compatible with rangeIncludes .*".r
     messages.filter {
       case tag() => false
       case entity() => false
